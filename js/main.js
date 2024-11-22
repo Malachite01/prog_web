@@ -1,4 +1,5 @@
 const gridSize = 12;
+let remainingFlags = 8;
 const mines = []
 
 class Case {
@@ -68,10 +69,14 @@ class Plateau {
 
 }
 
+// Empecher menu contextuel, pour utiliser clic droit = placer/retirer drapeau
+window.addEventListener(`contextmenu`, (e) => e.preventDefault());
+
 //Fonction pour créer la grille
 function createInitialGrid() {
-  // Elementt HTML de la grille
   const grid = document.getElementById('grid');
+  // Affichage du nombre de drapeaux restants au démarrage
+  document.getElementById('flag-counter').textContent = remainingFlags;
 
   // Création de la grille
   for (let i = 0; i < gridSize; i++) {
@@ -81,10 +86,11 @@ function createInitialGrid() {
       const button = document.createElement('button');
       button.classList.add('cell-button');
       // Attribut data-pos pour récupérer la position de la case (x,y)
+      //!! Attention, de 0 à 11, et (0,0) en haut à gauche
       button.setAttribute('data-pos', j + ',' + i);
-      button.onclick = (e) => {
-        gridClick(e);
-      }
+      button.onmousedown = (e) => {
+        handleMouseClick(e);
+      };
       cell.appendChild(button);
       row.appendChild(cell);
     }
@@ -92,6 +98,38 @@ function createInitialGrid() {
   }
 }
 
-function gridClick(e) {
-  alert(e.target.getAttribute('data-pos'));
+function handleMouseClick(e) {
+  const button = e.button; // 0 = gauche, 1 = milieu, 2 = droite
+  const pos = e.target.getAttribute('data-pos').split(','); // [x, y]
+
+  if (button === 0) {
+    // TODO: Gérer le clic gauche et les mines
+  } else if (button === 2) {
+    // Vérifier si la case contient déjà un drapeau
+    const existingFlag = e.target.querySelector('.flag');
+    if (existingFlag) {
+      // Supprimer le drapeau
+      existingFlag.remove();
+      updateFlagsCounter("-");
+    } else {
+      if (remainingFlags > 0) {
+        // Ajouter un drapeau
+        const flag = document.createElement('div');
+        flag.classList.add('flag');
+        e.target.appendChild(flag);
+        updateFlagsCounter("+");
+      }
+    }
+  }
+}
+
+function updateFlagsCounter(operator) {
+  const flagCounter = document.getElementById('flag-counter');
+  if (operator === "+") {
+    remainingFlags--;
+    flagCounter.textContent = remainingFlags;
+  } else if (operator === "-") {
+    remainingFlags++;
+    flagCounter.textContent = remainingFlags;
+  }
 }

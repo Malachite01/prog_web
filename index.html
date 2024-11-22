@@ -3,12 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Projet de programmation web</title>
+  <title>Projet de Programmation Web</title>
   <link rel="stylesheet" href="style.css">
   <script src="js/main.js"></script>
 </head>
-<body>
-  <h1>Démineur</h1>
-  <a href="pages/debug.html">Page de test des composants</a>
+<body onload="createInitialGrid(); generateMines();">
+  <img src="/img/logo.png" alt="logo du démineur fait main :)" id="logo">
+
+  <div id="score-board">
+    <img src="/img/mine.svg" width="30"><span id="mine-counter">0</span>
+    <div id="score-flag"></div><span id="flag-counter">0</span>
+    <button onclick="resetGame();">Reset</button>
+  </div>
+
+  <div id="grid-container">
+    <table id="grid">
+    </table>
+  </div>
 </body>
 </html>

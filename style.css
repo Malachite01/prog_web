@@ -1,8 +1,8 @@
 :root {
   /* Design de la page */
-  --background-color: rgb(216, 209, 176);
+  --background-color: rgb(210, 238, 220);
   /* TODO changer font*/
-  --font: 'Roboto', sans-serif;
+  --counter-font: 'Mood';
 
   /* Design de la grille */
   --grid-background-color-pair: rgb(255, 255, 255);
@@ -11,10 +11,14 @@
   --grid-tile-background-color: rgb(63, 212, 88);
   
   --grid-border-radius: 5px;
-  --grid-tile-size: 50px;
 
   /* Design des drapeaux */
   --flag-background-color: rgb(210, 71, 71);
+}
+
+@font-face {
+  font-family: Mood;
+  src: url("./fonts/MOOD.ttf");
 }
 
 body {
@@ -27,7 +31,29 @@ body {
   padding-bottom: 200px;
 }
 
+#logo {
+  margin-top: 25px;
+  width: 15rem;
+}
+
+#score-board {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+  gap: 25px;
+  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  border-radius: 5px;
+  padding: 5px;
+}
+
+#mine-counter, #flag-counter {
+  font-family: Mood;
+  font-size: 2.5rem;
+}
+
 #grid-container {
+  margin-top: 20px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,8 +61,6 @@ body {
 }
 
 table {
-  width: 50px*12px;
-  height: 50px*12px;
   border-radius: var(--grid-border-radius);
 }
 
@@ -48,9 +72,10 @@ table, tr, td {
 }
 
 td {
-  width: var(--grid-tile-size);
-  height: var(--grid-tile-size);
+  width: clamp(20px, 5vw, 50px);
+  height: clamp(20px, 5vw, 50px);
 }
+
 
 .cell-button {
   z-index: 5;
@@ -70,11 +95,62 @@ td {
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
-/* .cell-button::after {
+#score-flag {
+  position: relative;
   z-index: 10;
-  position: absolute;
-  content: '';
-  width: 100%;
-  height: 100%;
+  width: 5px;
+  height: 28px;
+  border-radius: 5px;
   background-color: var(--flag-background-color);
-} */
+  pointer-events: none;
+}
+#score-flag::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 0;
+  height: 0;
+  border-left: 20px solid var(--flag-triangle-color, white); 
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-radius: 2px;
+}
+
+.flag {
+  position: relative;
+  z-index: 10;
+  width: 5px;
+  height: clamp(40%, 80%, 90%);
+  border-radius: 5px;
+  background-color: var(--flag-background-color);
+  pointer-events: none;
+}
+
+.flag::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 0;
+  height: 0;
+  border-left: 20px solid var(--flag-triangle-color, white); 
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 730px) {
+  .flag::after {
+    border-left: 15px solid var(--flag-triangle-color, white); 
+    border-top: 8px solid transparent;
+    border-bottom: 8px solid transparent;
+  }
+}
+@media screen and (max-width: 530px) {
+  .flag::after {
+    border-left: 10px solid var(--flag-triangle-color, white); 
+    border-top: 5px solid transparent;
+    border-bottom: 5px solid transparent;
+  }
+}
