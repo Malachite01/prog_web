@@ -10,7 +10,7 @@ class Case {
   }
 
   isMine() {
-    return caseState == -1;
+    return caseState === -1;
   }
   
   neighborCalculation() {
@@ -23,15 +23,16 @@ class Case {
 
 class Plateau {
   constructor() {
-    this.size = 12;
+    this.size = gridSize;
     this.matrix = this.createEmptyBoard();
     this.generateMines();
   }
 
-  createEmptyBoard() { // crée la matrice de cases nulles 12*12
-    for (let x = 0; x < 12; x++) {
+  // crée la matrice de cases nulles 12*12
+  createEmptyBoard() {
+    for (let x = 0; x < gridSize; x++) {
       let row = []
-      for (let y = 0; y < 12; y++) {
+      for (let y = 0; y < gridSize; y++) {
         row.push(new Case(x,y));
       }
     }
@@ -78,12 +79,19 @@ function createInitialGrid() {
     for (let j = 0; j < gridSize; j++) {
       const cell = document.createElement('td');
       const button = document.createElement('button');
-      button.innerHTML = ' ';
       button.classList.add('cell-button');
+      // Attribut data-pos pour récupérer la position de la case (x,y)
+      button.setAttribute('data-pos', j + ',' + i);
+      button.onclick = (e) => {
+        gridClick(e);
+      }
       cell.appendChild(button);
       row.appendChild(cell);
     }
     grid.appendChild(row);
   }
+}
 
+function gridClick(e) {
+  alert(e.target.getAttribute('data-pos'));
 }
