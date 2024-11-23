@@ -42,6 +42,7 @@ body {
 #logo {
   margin-top: 25px;
   width: 15rem;
+  pointer-events: none;
 }
 
 #score-board {
@@ -53,9 +54,11 @@ body {
   box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
   border-radius: 5px;
   padding: 5px;
+  padding-right: 8px;
+  padding-left: 8px;
 }
 
-#time-counter, #mine-counter, #flag-counter {
+#time-counter, #flag-counter {
   font-family: MOOD_ct;
   font-size: 2.5rem;
 }

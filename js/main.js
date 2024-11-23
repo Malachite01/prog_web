@@ -105,6 +105,7 @@ function handleMouseClick(e) {
 
   if (button === 0) {
     // TODO: Gérer le clic gauche et les mines
+    alert(pos);
   } else if (button === 2) {
     // Vérifier si la case contient déjà un drapeau
     const existingFlag = e.target.querySelector('.flag');
@@ -149,5 +150,6 @@ document.addEventListener("DOMContentLoaded", () => {
       secondsElapsed++;
   }
 
+  // Appeler la fonction updateTimer toutes les secondes
   setInterval(updateTimer, 1000);
 });
