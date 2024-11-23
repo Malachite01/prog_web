@@ -72,7 +72,7 @@ class Plateau {
 // Empecher menu contextuel, pour utiliser clic droit = placer/retirer drapeau
 window.addEventListener(`contextmenu`, (e) => e.preventDefault());
 
-//Fonction pour créer la grille
+//Fonction pour créer la grille en HTML
 function createInitialGrid() {
   const grid = document.getElementById('grid');
   // Affichage du nombre de drapeaux restants au démarrage
@@ -89,6 +89,7 @@ function createInitialGrid() {
       //!! Attention, de 0 à 11, et (0,0) en haut à gauche
       button.setAttribute('data-pos', j + ',' + i);
       button.onmousedown = (e) => {
+        // Gérer le clic de la souris
         handleMouseClick(e);
       };
       cell.appendChild(button);
@@ -112,6 +113,7 @@ function handleMouseClick(e) {
       existingFlag.remove();
       updateFlagsCounter("-");
     } else {
+      // S'il nous reste des drapeaux à placer
       if (remainingFlags > 0) {
         // Ajouter un drapeau
         const flag = document.createElement('div');
@@ -123,6 +125,7 @@ function handleMouseClick(e) {
   }
 }
 
+// Fonction pour mettre à jour le compteur de drapeaux
 function updateFlagsCounter(operator) {
   const flagCounter = document.getElementById('flag-counter');
   if (operator === "+") {
@@ -133,3 +136,18 @@ function updateFlagsCounter(operator) {
     flagCounter.textContent = remainingFlags;
   }
 }
+
+// Mettre a jour le timer
+document.addEventListener("DOMContentLoaded", () => {
+  const timeCounter = document.getElementById("time-counter");
+  let secondsElapsed = 0;
+
+  function updateTimer() {
+      const minutes = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
+      const seconds = String(secondsElapsed % 60).padStart(2, '0');
+      timeCounter.textContent = `${minutes}:${seconds}`;
+      secondsElapsed++;
+  }
+
+  setInterval(updateTimer, 1000);
+});
