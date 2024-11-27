@@ -5,6 +5,8 @@ let timer = 0;
 let timerInterval = null;
 
 // TODO: idées: niveaux de difficultés (changer gridSize), ajouter une sauvegarde de highscore(avec un formulaire surnom et valider), drapeaux mode téléphone
+
+//#region Case class
 class Case {
   constructor(x, y, caseValue = 0, isRevealed = false, isFlaged = false) {
     this.x = x;
@@ -21,7 +23,10 @@ class Case {
     return this.caseValue === -1;
   }
 }
+//#endregion
 
+
+//#region Plateau class
 class Plateau {
   constructor(size, initialClick) {
     this.size = size;
@@ -91,8 +96,8 @@ class Plateau {
    * @param {Function} callback - Fonction passée en param appliquée à chaque voisin (neighbor).
    */
   processNeighbors(c, callback) {
-    for (let i = -1; i < 2; i++) {
-      for (let j = -1; j < 2; j++) {
+    for (let i = -1; i <= 1; i++) {
+      for (let j = -1; j <= 1; j++) {
         // Ignorer la case actuelle
         if (i === 0 && j === 0) continue;
 
@@ -108,36 +113,30 @@ class Plateau {
   }
   
   /**
-   * Utilisée dans le constructeur, pour TOUTES LES CASES de la matrice, calcule leur valeur, ie nombre de mines autour
+   * Utilisée dans le constructeur, parcourt toutes les cases de la matrice et calcule leur valeur (nombre de mines autour).
    */
   computeField() {
     for (let i = 0; i < gridSize; i++) {
       for (let j = 0; j < gridSize; j++) {
-        // Calculer la valeur de la case
-        this.neighborComputation(this.field[i][j]);
+        const currentCase = this.field[i][j];
+        
+        // Ne pas calculer la valeur pour une mine
+        if (!currentCase.isMine()) {
+          let neighbors = 0;
+
+          // Compter les mines dans les voisins
+          this.processNeighbors(currentCase, (neighbor) => {
+            if (neighbor.isMine()) {
+              neighbors++;
+            }
+          });
+
+          currentCase.caseValue = neighbors;
+        }
       }
     }
   }
 
-  /**
-   * Remplit LA CASE c, ie calcule le nombre de mines aux alentours et rentre sa valeur dans sa case 
-   * @param c 
-   */
-  neighborComputation(c) {
-    // Ne pas calculer les mines
-    if (!c.isMine()) {
-      let neighbors = 0;
-  
-      // Compter les mines autour de la case
-      this.processNeighbors(c, (neighbor) => {
-        if (neighbor.isMine()) {
-          neighbors++;
-        }
-      });
-  
-      c.caseValue = neighbors;
-    }
-  }
 
   /**
   * Révèle toutes les cases à 0 adjacentes et leurs voisins directs (non-minés).
@@ -170,7 +169,7 @@ class Plateau {
     return x >= 0 && y >= 0 && x < gridSize && y < gridSize;
   }
 }
-
+//#endregion
 
 //#region Grid creation and event handling functions
 
