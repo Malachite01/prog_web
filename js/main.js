@@ -1,11 +1,10 @@
 const gridSize = 12;
-const nbMines = 25;
+const nbMines = 30;
 let remainingFlags = nbMines;
 let timer = 0;
 let timerInterval = null;
 
 // TODO: idées: niveaux de difficultés (changer gridSize), ajouter une sauvegarde de highscore(avec un formulaire surnom et valider), drapeaux mode téléphone
-// TODO: constructeur de plateau doit prendre un parametre d'entree qui est la premiere case cliquée
 class Case {
   constructor(x, y, caseValue = 0, isRevealed = false, isFlaged = false) {
     this.x = x;
@@ -24,16 +23,17 @@ class Case {
 }
 
 class Plateau {
-  constructor(size) {
+  constructor(size, initialClick) {
     this.size = size;
     this.field= this.createEmptyBoard();
-    this.generateMines(nbMines);
+    const [initX, initY] = initialClick;
+    this.generateMines(nbMines, initX, initY);
     this.computeField();
   }
 
   /**
-   * Renvoie une matrice de cases nulles (de valeur 0) carrée de dimension de la constante gridSiz
-   */
+  * Renvoie une matrice de cases nulles (de valeur 0) carrée de dimension gridSize
+  */
   createEmptyBoard() {
     let field = [] // Matrice de cases
     for (let x = 0; x < gridSize; x++) {
@@ -47,28 +47,29 @@ class Plateau {
   }
 
   /**
-   * Place une mine au hasard sur le terrain en vérifiant qu'il ne s'agit 
-   * ni d'une case minée ou d'une case voisine de la première case cliquée
+   * Genere un nombre de mines donné sur le terrain
    */
-  placeMine() {
-    let idRow = Math.floor(Math.random() * gridSize);
-    let idCol = Math.floor(Math.random() * gridSize);
-  
-    while (this.field[idRow][idCol].caseValue === -1 || this.checkNeighborCase(0, 0, idRow, idCol)) {
-      idRow = Math.floor(Math.random() * gridSize);
-      idCol = Math.floor(Math.random() * gridSize);
+  generateMines(nbMines, initX, initY) {
+    for (let i = 0; i < nbMines; i++) {
+      this.placeMine(initX, initY);
     }
-  
-    this.field[idRow][idCol].caseValue = -1;
   }
 
   /**
-   * Genere un nombre de mines donné sur le terrain
+   * Place une mine au hasard sur le terrain en vérifiant qu'il ne s'agit 
+   * ni d'une case minée ou d'une case voisine de la première case cliquée
    */
-  generateMines(nbMines) {
-    for (let i = 0; i < nbMines; i++) {
-      this.placeMine();
-    }
+  placeMine(initX, initY) {
+    let idRow, idCol;
+    do {
+      idRow = Math.floor(Math.random() * gridSize);
+      idCol = Math.floor(Math.random() * gridSize);
+    } while (
+      this.field[idRow][idCol].caseValue === -1 ||
+      this.checkNeighborCase(initX, initY, idRow, idCol)
+    );
+
+    this.field[idRow][idCol].caseValue = -1;
   }
 
   /**
@@ -85,49 +86,78 @@ class Plateau {
   }
   
   /**
-   * Remplit la case c, c-à-d calcul son nombre de mine aux alentours et rentre sa valeur dans sa case valeur 
-   * @param c 
+   * Applique une fonction callback à tous les voisins d'une case donnée.
+   * @param {Case} c - La case centrale.
+   * @param {Function} callback - Fonction passée en param appliquée à chaque voisin (neighbor).
    */
-  neighborCalculation(c) {
-    let neighbors = 0;
-    if (!c.isMine()) {
-      for (let i =-1; i< 2; i++) {
-        for (let j = -1; j <2; j ++) {
-          if (c.x+i >=0 && c.y+j >=0 && c.x+i<gridSize && c.y+j<gridSize && this.field[c.x+i][c.y+j].isMine() && (i != 0 || j != 0)) {
-            neighbors ++;
-          }         
+  processNeighbors(c, callback) {
+    for (let i = -1; i < 2; i++) {
+      for (let j = -1; j < 2; j++) {
+        // Ignorer la case actuelle
+        if (i === 0 && j === 0) continue;
+
+        // Coordonnées du voisin
+        const nx = c.x + i;
+        const ny = c.y + j;
+        // Appliquer la fonction callback uniquement si les coordonnées sont valides
+        if (this.isInsideBounds(nx, ny)) {
+          callback(this.field[nx][ny]);
         }
       }
+    }
+  }
+  
+  /**
+   * Utilisée dans le constructeur, pour TOUTES LES CASES de la matrice, calcule leur valeur, ie nombre de mines autour
+   */
+  computeField() {
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+        // Calculer la valeur de la case
+        this.neighborComputation(this.field[i][j]);
+      }
+    }
+  }
+
+  /**
+   * Remplit LA CASE c, ie calcule le nombre de mines aux alentours et rentre sa valeur dans sa case 
+   * @param c 
+   */
+  neighborComputation(c) {
+    // Ne pas calculer les mines
+    if (!c.isMine()) {
+      let neighbors = 0;
+  
+      // Compter les mines autour de la case
+      this.processNeighbors(c, (neighbor) => {
+        if (neighbor.isMine()) {
+          neighbors++;
+        }
+      });
+  
       c.caseValue = neighbors;
     }
   }
 
   /**
-   * utilisé dans le constructeur, pour toute les cases de la matrice, calcule sa valeur, ie, son nombre de mine autour
-   */
-  computeField() {
-    for (let i = 0; i < gridSize; i++) {
-      for (let j = 0; j < gridSize; j++) {
-        this.neighborCalculation(this.field[i][j]);
-      }
-    }
-  }
-
-  /**
-   * reveal tout les cases à 0 adjacentes à celle ci quand une case 0 est découverte
-   */
+  * Révèle toutes les cases à 0 adjacentes et leurs voisins directs (non-minés).
+  * @param {Case} c
+  */
   revealAllZero(c) {
+    // Révéler la case actuelle
     c.isRevealed = true;
-    if (c.caseValue > 0 ) return null;
-    // lance une recursivité sur les cases n'étant pas revealed et qui ont une value de 0
-    for (let i =-1; i< 2; i++) {
-      for (let j = -1; j <2; j ++) {
-        if (this.isInsideBounds(c.x + i, c.y + j) && !this.field[c.x + i][c.y + j].isRevealed && this.field[c.x + i][c.y + j].caseValue === 0) {
-          this.field[c.x + i][c.y + j].isRevealed = true;
-          this.revealAllZero(this.field[c.x + i][c.y + j]);
+  
+    // Révéler les voisins directs non-minés
+    this.processNeighbors(c, (neighbor) => {
+      if (!neighbor.isRevealed && !neighbor.isMine()) {
+        neighbor.isRevealed = true;
+  
+        // Si le voisin est une case à 0, poursuivre la récursion
+        if (neighbor.caseValue === 0) {
+          this.revealAllZero(neighbor);
         }
       }
-    }
+    });
   }
 
   /**
@@ -141,14 +171,51 @@ class Plateau {
   }
 }
 
-// TODO: ajouter une grille vide pour obtenir le clic initial
-function startGame() {
-  const field = new Plateau(gridSize);
-  createHTMLGrid(field);
+
+//#region Grid creation and event handling functions
+
+/**
+ * Fonction pour démarrer le jeu avec un clic initial pour éviter la mine dès le début
+ * @param {Variable d'événement de clic} e
+ * @param {Objet Plateau} field
+ * */
+function startGameWithInitialClick(e) {
+  const [initX, initY] = e.target
+        .getAttribute('data-pos')
+        .split(',')
+        .map(Number);
+  const field = new Plateau(gridSize, [initX, initY]);
+  handleMouseClick(e, field);
 }
 
-
-//#region Grid creation and event handling 
+/**
+ * Fonction pour créer la grille INITIALE (vide) en HTML et faire le clic initial
+ */
+function createEmptyHTMLGrid() {
+  const grid = document.getElementById('grid');
+  // Affichage du nombre de drapeaux restants au démarrage
+  document.getElementById('flag-counter').textContent = remainingFlags;
+  
+  // Création de la grille
+  for (let i = 0; i < gridSize; i++) { // Lignes
+    const row = document.createElement('tr');
+    for (let j = 0; j < gridSize; j++) { // Colonnes
+      const cell = document.createElement('td');
+      const button = document.createElement('button');
+      button.classList.add('cell-button');
+      // Attribut data-pos pour récupérer la position de la case (x,y)
+      //!! Attention, de 0 à 11, et (0,0) en haut à gauche
+      button.setAttribute('data-pos', i + ',' + j);
+      // Pas de moussedown pour le clic initial pour éviter les drapeaux clic droit
+      button.onclick = (e) => {
+        startGameWithInitialClick(e);
+      };
+      cell.appendChild(button);
+      row.appendChild(cell);
+    }
+    grid.appendChild(row);
+  }
+}
 
 /**
  * Fonction pour créer la grille en HTML
@@ -157,8 +224,6 @@ function createHTMLGrid(field) {
   const grid = document.getElementById('grid');
   // Empecher menu contextuel, pour utiliser clic droit = placer/retirer drapeau
   grid.addEventListener(`contextmenu`, (e) => e.preventDefault());
-  // Affichage du nombre de drapeaux restants au démarrage
-  document.getElementById('flag-counter').textContent = remainingFlags;
 
   // Création de la grille
   for (let i = 0; i < field.size; i++) { // Lignes
@@ -167,20 +232,19 @@ function createHTMLGrid(field) {
       const cell = document.createElement('td');
       const button = document.createElement('button');
       button.classList.add('cell-button');
-      // Attribut data-pos pour récupérer la position de la case (x,y)
-      //!! Attention, de 0 à 11, et (0,0) en haut à gauche
       button.setAttribute('data-pos', i + ',' + j);
       button.onmousedown = (e) => {
         // Gérer le clic de la souris chaque clic = regénérer la grille html
         handleMouseClick(e, field);
       };
 
-      // Visuel a chaque fois que l'on redessine
+      // Visuel (car a chaque fois on redessine la grille)
       if(field.field[i][j].isFlaged) {
         const flag = document.createElement('div');
         flag.classList.add('flag');
         button.appendChild(flag);
       }
+      // Cases découvertes
       if(field.field[i][j].isRevealed) {
         // Classe CSS pour les couleurs de nombres
         const numCssClass = ["zero","one", "two", "three", "four", "five", "six"];
@@ -221,7 +285,7 @@ function reDrawGrid(field) {
  * @param {Variable d'évenement  de clic} e 
  */
 function handleMouseClick(e, field) {
-  const button = e.button; // 0 = gauche, 1 = milieu, 2 = droite
+  const button = e.button;
   const pos = e.target.getAttribute('data-pos').split(','); // [x, y]
   // Convert pos[0] and pos[1] to numbers
   const x = parseInt(pos[0], 10);
@@ -230,7 +294,7 @@ function handleMouseClick(e, field) {
   // Démarrer le timer si ce n'est pas deja fait appeler la fonction updateTimer toutes les secondes
   timerInterval === null ? timerInterval = setInterval(updateTimer, 1000) : null;
 
-  if (button === 0) {
+  if (button === 0) { // Clic gauche
     // Si déja un flag, et clic gauche alors on ne peut pas reveal
     if (field.field[x][y].isFlaged) return;
     // Mettre à jour la case
@@ -242,10 +306,9 @@ function handleMouseClick(e, field) {
     reDrawGrid(field);
     // Si la case cliquée est une mine, game over
     if (field.field[x][y].isMine()) {
-      alert("Game Over");
-      clearInterval(timerInterval);
+      gameOver();
     }
-  } else if (button === 2) {
+  } else if (button === 2) { //click droit
     if (field.field[x][y].isFlaged && !field.field[x][y].isRevealed) {
       // Mettre à jour la case
       field.field[x][y].isFlaged = false;
@@ -289,4 +352,13 @@ function updateTimer() {
   timeCounter.textContent = `${minutes}:${seconds}`;
   timer++;
 }
+
+/**
+ * Fonction pour arrêter le jeu et afficher un message de fin
+ */
+function gameOver() {
+  alert("Game Over");
+  clearInterval(timerInterval);
+}
+
 //#endregion
