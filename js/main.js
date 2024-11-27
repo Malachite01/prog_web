@@ -1,78 +1,143 @@
 const gridSize = 12;
+const nbMines = 30;
 let remainingFlags = 8;
+let timer = 0;
+let timerInterval = null;
 const mines = []
 
+// TODO: idées: niveaux de difficultés (changer gridSize), ajouter une sauvegarde de highscore(avec un formulaire surnom et valider)
+
 class Case {
-  constructor(x, y, caseState = 0, isRevealed = false) {
+
+  constructor(x, y, caseValue = 0, isRevealed = false) {
     this.x = x;
     this.y = y;
-    this.caseState = caseState;
+    this.caseValue = caseValue;
     this.isRevealed = isRevealed;
   }
 
+  /**
+   * Renvoie un booléen indiquant si la case est minée ou non
+   */
   isMine() {
-    return caseState === -1;
+    return caseValue === -1;
   }
-  
-  neighborCalculation() {
-    let nbNeighbor = 0;
-    if (!this.isMine()) {
-      
-    }
-  }
+
 }
 
 class Plateau {
-  constructor() {
-    this.size = gridSize;
-    this.matrix = this.createEmptyBoard();
-    this.generateMines();
+  
+  constructor(size) {
+    this.size = size;
+    this.field= this.createEmptyBoard();
+    this.generateMines(nbMines);
   }
 
-  // crée la matrice de cases nulles 12*12
+  /**
+   * Renvoie une matrice de cases nulles (de valeur 0) carrée de dimension de la constante gridSiz
+   */
   createEmptyBoard() {
+    let matrix = []
     for (let x = 0; x < gridSize; x++) {
       let row = []
       for (let y = 0; y < gridSize; y++) {
         row.push(new Case(x,y));
       }
+      matrix.push(row);
     }
+    return matrix;
   }
 
-  //génère 30 mines dans un terrain en 12x12
-  generateMines() {
-    for (let i = 0; i < 30; i++) {
-      placeMine();
-    }
-  }
-
-  //place une mine au hasard sur une case sans mine 
-  //!! ajout de la vérification du clic à ajouter plus tard !!
+  /**
+   * Place une mine au hasard sur le terrain en vérifiant qu'il ne s'agit 
+   * ni d'une case minée ou d'une case voisine de la première case cliquée
+   */
   placeMine() {
+    
     let indRow = Math.ceil(Math.random() * 11);
     let indCol = Math.ceil(Math.random() * 11);
 
-    while (this.matrix[indRow][indCol].caseState == -1 && !this.checkClickedCase(0, 0, indRow, indCol)) {
+    while (this.field[indRow][indCol].caseValue === -1 && !this.checkNeighborCase(0, 0, indRow, indCol)) {
       indRow = Math.ceil(Math.random() * 11);
       indCol = Math.ceil(Math.random() * 11);
     }
 
-    this.matrix[indRow][indCol] = -1;
+    this.field[indRow][indCol].caseValue = -1;
 
   }
 
-  checkClickedCase(x, y, indRow, indCol) {
-    let rowValid = (indRow < x - 1) || (indRow > x + 1);
-    let colValid = (indCol < y - 1) || (indCol > y + 1);
+  /**
+   * Genere un nombre de mines donné sur le terrain
+   */
+  generateMines(nbMines) {
+    for (let i = 0; i < nbMines; i++) {
+      this.placeMine();
+    }
+  }
+
+  /**
+   * Renvoie un booléen indiquant si la case 2 avoisinne la case 1 
+   * @param {number} x1 ligne de la case 1 
+   * @param {number} y1 colonne de la case 1 
+   * @param {number} x2 ligne de la case 2 
+   * @param {number} y2 colonne de la case 2 
+   */  
+  checkNeighborCase(x1, y1, x2, y2) {
+    let rowValid = (x2 < x1 - 1) || (x2 > x1 + 1);
+    let colValid = (y2 < y1 - 1) || (y2 > y1 + 1);
     return rowValid && colValid;
   }
+  
+  /**
+   * Renvoie le nombre de mine autour de la case c
+   * @param c 
+   */
+  neighborCalculation(c) {
+    let nbNeighbor = 0;
+    if (!c.isMine()) {
+      for (let i =-1; i< 2; i+=1) {
+        for (let j = -1; j <2; j +=1) {
+          if (c.x+i >=0 && c.y+j >=0 && c.x+i<gridSize && c.y+j<gridSize && this.field[c.x+i][c.y+j].isMine() && (i != 0 || j != 0)) {
+            nbNeighbor +=1;
+          }         
+        }
+      }
+    }
+    c.caseValue = nbNeighbor;
+  }
 
+  /**
+   * reveal tout les cases à 0 adjacentes à celle ci quand une case 0 est découverte
+   * TODO il manque le reveal des autres cases, lien avec le css et html que je sais pas faire
+   */
+  revealAllZero(c) {
+    c.isRevealed = true;
+    if (c.caseValue >0 ) {return null;}
+    // lance une recursivité sur les cases n'étant pas revealed et qui ont une value de 0
+    for (let i =-1; i< 2; i+=1) {
+      for (let j = -1; j <2; j +=1) {
+        if (c.x+i >=0 && c.y+j >=0 && c.x+i<gridSize && c.y+j<gridSize && !this.field[c.x+i][c.y+j].isRevealed && this.field[c.x+i][c.y+j].caseValue === 0){
+          this.field[c.x+i][c.y+j].isRevealed = true;
+          this.revealAllZero(this.field[c.x+i][c.y+j])
+        }
+      }
+    }
+  }
 }
 
+function createMines() {
+  const test = new Plateau(gridSize);
+  console.log(test.field)
+}
+
+
+//#region Grid creation and event handling
 // Empecher menu contextuel, pour utiliser clic droit = placer/retirer drapeau
 window.addEventListener(`contextmenu`, (e) => e.preventDefault());
 
-//Fonction pour créer la grille en HTML
+/**
+ * Fonction pour créer la grille en HTML
+ */
 function createInitialGrid() {
   const grid = document.getElementById('grid');
   // Affichage du nombre de drapeaux restants au démarrage
@@ -99,12 +164,20 @@ function createInitialGrid() {
   }
 }
 
+/**
+ * Fonction pour gérer le clic de la souris sur une case
+ * @param {Variable d'évenement  de clic} e 
+ */
 function handleMouseClick(e) {
   const button = e.button; // 0 = gauche, 1 = milieu, 2 = droite
   const pos = e.target.getAttribute('data-pos').split(','); // [x, y]
 
+  // Démarrer le timer si ce n'est pas deja fait appeler la fonction updateTimer toutes les secondes
+  timerInterval === null ? timerInterval = setInterval(updateTimer, 1000) : null;
+
   if (button === 0) {
     // TODO: Gérer le clic gauche et les mines
+    // TODO: si déja un flag, et clic gauche alors remove flag et ne rien faire
     alert(pos);
   } else if (button === 2) {
     // Vérifier si la case contient déjà un drapeau
@@ -126,7 +199,10 @@ function handleMouseClick(e) {
   }
 }
 
-// Fonction pour mettre à jour le compteur de drapeaux
+/**
+ * Fonction pour mettre à jour le compteur de drapeaux
+ * @param {Charactère permettant de différencier si l'on doit incrémenter ou décrémenter le compteur} operator 
+ */
 function updateFlagsCounter(operator) {
   const flagCounter = document.getElementById('flag-counter');
   if (operator === "+") {
@@ -138,18 +214,16 @@ function updateFlagsCounter(operator) {
   }
 }
 
-// Mettre a jour le timer
-document.addEventListener("DOMContentLoaded", () => {
+/**
+ * Fonction pour mettre à jour le timer du jeu (est appelée 
+ * toutes les secondes dès la première interaction)
+ */
+function updateTimer() {
   const timeCounter = document.getElementById("time-counter");
-  let secondsElapsed = 0;
+  const minutes = String(Math.floor(timer / 60)).padStart(2, '0');
+  const seconds = String(timer % 60).padStart(2, '0');
+  timeCounter.textContent = `${minutes}:${seconds}`;
+  timer++;
+}
 
-  function updateTimer() {
-      const minutes = String(Math.floor(secondsElapsed / 60)).padStart(2, '0');
-      const seconds = String(secondsElapsed % 60).padStart(2, '0');
-      timeCounter.textContent = `${minutes}:${seconds}`;
-      secondsElapsed++;
-  }
-
-  // Appeler la fonction updateTimer toutes les secondes
-  setInterval(updateTimer, 1000);
-});
+//#endregion

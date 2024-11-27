@@ -8,12 +8,16 @@
   --grid-background-color-pair: rgb(255, 255, 255);
   --grid-background-color-odd: rgb(255, 255, 255);
   --grid-border-color: rgb(41, 41, 41);
-  --grid-tile-background-color: rgb(63, 212, 88);
-  
+  --grid-tile-background-color: rgb(81, 223, 105);
+  --grid-tile-hover-background-color: rgb(138, 210, 150);
   --grid-border-radius: 5px;
+
+  /* Design du score board */
+  --scoreboard-background-color: rgba(135, 149, 176, 0.725);
 
   /* Design des drapeaux */
   --flag-background-color: rgb(210, 71, 71);
+  --flag-triangle-color: rgb(255, 255, 255);
 
   /* Design du timer */
   --timer-background-color: rgb(71, 106, 210);
@@ -34,9 +38,13 @@ body {
   place-items: center;
   margin: 0;
   padding: 0;
-  background-color: var(--background-color);
   font-family: var(--font);
   padding-bottom: 200px;
+  background-color: #ededed;
+  opacity: 0.8;
+  background-image:  linear-gradient(#dee4f0 3.4000000000000004px, transparent 3.4000000000000004px), linear-gradient(90deg, #dee4f0 3.4000000000000004px, transparent 3.4000000000000004px), linear-gradient(#dee4f0 1.7000000000000002px, transparent 1.7000000000000002px), linear-gradient(90deg, #dee4f0 1.7000000000000002px, #ededed 1.7000000000000002px);
+  background-size: 85px 85px, 85px 85px, 17px 17px, 17px 17px;
+  background-position: -3.4000000000000004px -3.4000000000000004px, -3.4000000000000004px -3.4000000000000004px, -1.7000000000000002px -1.7000000000000002px, -1.7000000000000002px -1.7000000000000002px;
 }
 
 #logo {
@@ -51,7 +59,8 @@ body {
   align-items: center;
   margin-top: 20px;
   gap: 25px;
-  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+  background-color: var(--scoreboard-background-color);
+  box-shadow: rgba(0, 0, 0, 0.09) 0px 2px 1px, rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px, rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
   border-radius: 5px;
   padding: 5px;
   padding-right: 8px;
@@ -76,10 +85,30 @@ body {
   color: white;
   border: none;
   cursor: pointer;
+  transition: all 0.3s;
 }
 #reset-button:hover {
   background-color: rgb(210, 71, 71, 0.8);
   box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+  animation: reset-button-anim 1s infinite;
+}
+@keyframes reset-button-anim {
+  0% {
+    transform: scale(1) rotate(0deg);
+  }
+  25% {
+    transform: scale(1.05) rotate(-5deg);
+  }
+  50% {
+    transform: scale(1.05) rotate(5deg);
+  }
+  75% {
+    transform: scale(1.05) rotate(-5deg);
+  }
+  100% {
+    transform: scale(1) rotate(0deg);
+  }
+  
 }
 
 #reset-button>img {
@@ -127,7 +156,7 @@ td {
 }
 
 .cell-button:hover {
-  background-color: rgb(89, 196, 107, 0.5);
+  background-color: var(--grid-tile-hover-background-color);
   box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
 }
 
@@ -147,7 +176,7 @@ td {
   left: 100%;
   width: 0;
   height: 0;
-  border-left: 20px solid var(--flag-triangle-color, white); 
+  border-left: 20px solid var(--flag-triangle-color, var(--flag-triangle-color)); 
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
   border-radius: 2px;
@@ -170,7 +199,7 @@ td {
   left: 100%;
   width: 0;
   height: 0;
-  border-left: 20px solid var(--flag-triangle-color, white); 
+  border-left: 20px solid var(--flag-triangle-color, var(--flag-triangle-color)); 
   border-top: 10px solid transparent;
   border-bottom: 10px solid transparent;
   border-radius: 2px;
@@ -178,14 +207,14 @@ td {
 
 @media screen and (max-width: 730px) {
   .flag::after {
-    border-left: 15px solid var(--flag-triangle-color, white); 
+    border-left: 15px solid var(--flag-triangle-color, var(--flag-triangle-color)); 
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
   }
 }
 @media screen and (max-width: 530px) {
   .flag::after {
-    border-left: 10px solid var(--flag-triangle-color, white); 
+    border-left: 10px solid var(--flag-triangle-color, var(--flag-triangle-color)); 
     border-top: 5px solid transparent;
     border-bottom: 5px solid transparent;
   }
