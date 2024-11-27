@@ -5,7 +5,7 @@ let timer = 0;
 let timerInterval = null;
 const mines = []
 
-// TODO: idées: niveaux de difficultés (changer gridSize), ajouter une sauvegarde de highscore(avec un formulaire surnom et valider)
+// TODO: idées: niveaux de difficultés (changer gridSize), ajouter une sauvegarde de highscore(avec un formulaire surnom et valider), drapeaux mode téléphone
 // TODO: constructeur de plateau doit prendre un parametre d'entree qui est la premiere case cliquée
 class Case {
   constructor(x, y, caseValue = 0, isRevealed = false) {
