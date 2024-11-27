@@ -45,6 +45,7 @@ body {
   background-image:  linear-gradient(#dee4f0 3.4000000000000004px, transparent 3.4000000000000004px), linear-gradient(90deg, #dee4f0 3.4000000000000004px, transparent 3.4000000000000004px), linear-gradient(#dee4f0 1.7000000000000002px, transparent 1.7000000000000002px), linear-gradient(90deg, #dee4f0 1.7000000000000002px, #ededed 1.7000000000000002px);
   background-size: 85px 85px, 85px 85px, 17px 17px, 17px 17px;
   background-position: -3.4000000000000004px -3.4000000000000004px, -3.4000000000000004px -3.4000000000000004px, -1.7000000000000002px -1.7000000000000002px, -1.7000000000000002px -1.7000000000000002px;
+  cursor: url('img/shovel.png'),auto;
 }
 
 #logo {
@@ -151,7 +152,7 @@ td {
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
   margin: 2px;
   border: none;
-  cursor: pointer;
+  cursor: url('img/shovel.png'),auto;
   border-radius: var(--grid-border-radius);
 }
 

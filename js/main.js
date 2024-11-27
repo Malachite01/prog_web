@@ -6,9 +6,8 @@ let timerInterval = null;
 const mines = []
 
 // TODO: idées: niveaux de difficultés (changer gridSize), ajouter une sauvegarde de highscore(avec un formulaire surnom et valider)
-
+// TODO: constructeur de plateau doit prendre un parametre d'entree qui est la premiere case cliquée
 class Case {
-
   constructor(x, y, caseValue = 0, isRevealed = false) {
     this.x = x;
     this.y = y;
@@ -20,32 +19,31 @@ class Case {
    * Renvoie un booléen indiquant si la case est minée ou non
    */
   isMine() {
-    return caseValue === -1;
+    return this.caseValue === -1;
   }
-
 }
 
 class Plateau {
-  
   constructor(size) {
     this.size = size;
     this.field= this.createEmptyBoard();
     this.generateMines(nbMines);
+    this.computeField();
   }
 
   /**
    * Renvoie une matrice de cases nulles (de valeur 0) carrée de dimension de la constante gridSiz
    */
   createEmptyBoard() {
-    let matrix = []
+    let field = [] // Matrice de cases
     for (let x = 0; x < gridSize; x++) {
       let row = []
       for (let y = 0; y < gridSize; y++) {
         row.push(new Case(x,y));
       }
-      matrix.push(row);
+      field.push(row);
     }
-    return matrix;
+    return field;
   }
 
   /**
@@ -53,16 +51,15 @@ class Plateau {
    * ni d'une case minée ou d'une case voisine de la première case cliquée
    */
   placeMine() {
-    
-    let indRow = Math.ceil(Math.random() * 11);
-    let indCol = Math.ceil(Math.random() * 11);
+    let idRow = Math.ceil(Math.random() * 11);
+    let idCol = Math.ceil(Math.random() * 11);
 
-    while (this.field[indRow][indCol].caseValue === -1 && !this.checkNeighborCase(0, 0, indRow, indCol)) {
-      indRow = Math.ceil(Math.random() * 11);
-      indCol = Math.ceil(Math.random() * 11);
+    while (this.field[idRow][idCol].caseValue === -1 && !this.checkNeighborCase(0, 0, idRow, idCol)) {
+      idRow = Math.ceil(Math.random() * 11);
+      idCol = Math.ceil(Math.random() * 11);
     }
 
-    this.field[indRow][indCol].caseValue = -1;
+    this.field[idRow][idCol].caseValue = -1;
 
   }
 
@@ -89,26 +86,37 @@ class Plateau {
   }
   
   /**
-   * Renvoie le nombre de mine autour de la case c
+   * Remplit la case c, c-à-d calcul son nombre de mine aux alentours et rentre sa valeur dans sa case valeur 
    * @param c 
    */
   neighborCalculation(c) {
-    let nbNeighbor = 0;
+    let neighbors = 0;
     if (!c.isMine()) {
       for (let i =-1; i< 2; i+=1) {
         for (let j = -1; j <2; j +=1) {
           if (c.x+i >=0 && c.y+j >=0 && c.x+i<gridSize && c.y+j<gridSize && this.field[c.x+i][c.y+j].isMine() && (i != 0 || j != 0)) {
-            nbNeighbor +=1;
+            neighbors +=1;
           }         
         }
       }
+      c.caseValue = neighbors;
     }
-    c.caseValue = nbNeighbor;
+  }
+
+  /**
+   * utilisé dans le constructeur, pour toute les cases de la matrice, calcule sa valeur, ie, son nombre de mine autour
+   */
+  computeField() {
+    for (let i = 0; i < gridSize; i+=1) {
+      for (let j = 0; j < gridSize; j+=1) {
+        this.neighborCalculation(this.field[i][j])
+      }
+    }
   }
 
   /**
    * reveal tout les cases à 0 adjacentes à celle ci quand une case 0 est découverte
-   * TODO il manque le reveal des autres cases, lien avec le css et html que je sais pas faire
+   * TODO il manque le reveal des autres cases, lien avec le html
    */
   revealAllZero(c) {
     c.isRevealed = true;
@@ -125,9 +133,9 @@ class Plateau {
   }
 }
 
-function createMines() {
-  const test = new Plateau(gridSize);
-  console.log(test.field)
+function startGame() {
+  const field = new Plateau(gridSize)  ;
+  console.log(field.field)
 }
 
 
