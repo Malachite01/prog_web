@@ -5,7 +5,7 @@ let timer = 0;
 let timerInterval = null;
 
 // TODO: idées: niveaux de difficultés (changer gridSize), ajouter une sauvegarde de highscore(avec un formulaire surnom et valider), drapeaux mode téléphone
-
+//  ajouter un I d'informations sur comment jouer
 //#region Case class
 class Case {
   constructor(x, y, caseValue = 0, isRevealed = false, isFlaged = false) {
@@ -356,8 +356,33 @@ function updateTimer() {
  * Fonction pour arrêter le jeu et afficher un message de fin
  */
 function gameOver() {
-  alert("Game Over");
+  toggleContainer('game-over');
   clearInterval(timerInterval);
+}
+
+//#endregion
+
+//#region Visuel
+
+function toggleContainer(containerName) {
+  const container = document.getElementById(containerName+'-container');
+
+  if (container.classList.contains('fenButtonOn')) {
+    // Si la fenêtre est visible, appliquer l'animation de disparition
+    container.classList.remove('fenButtonOn');
+    container.classList.add('fenButtonOff');
+
+    // Attendre la fin de l'animation pour cacher le conteneur
+    container.addEventListener('animationend', () => {
+      container.style.display = 'none';
+    }, { once: true });
+
+  } else {
+    // Rendre le conteneur visible et appliquer l'animation d'apparition
+    container.style.display = 'grid';
+    container.classList.remove('fenButtonOff');
+    container.classList.add('fenButtonOn');
+  }
 }
 
 //#endregion

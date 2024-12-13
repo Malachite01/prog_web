@@ -265,3 +265,144 @@ td {
     font-size: 1rem;
   }
 }
+
+#information {
+  position: relative;
+  display: flex;
+  font-family: MOOD;
+  font-size: 2rem;
+  background-color: var(--timer-background-color);
+  color: white;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
+  border: none;
+  padding: 5px;
+  width: 30px;
+  height: 30px;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50px;
+  cursor: pointer;
+}
+#information:hover {
+  background-color: rgb(32, 64, 160);
+}
+#information:hover::after {
+  content: 'Aide';
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  top: -25px;
+  left: -50%;
+  background-color: rgb(137, 150, 165);
+  width: 50px;
+  height: 20px;
+  padding: 2px;
+  border-radius: var(--grid-border-radius);
+  font-family: MOOD;
+  font-size: 1.5rem;
+}
+
+.invisible-container {
+  z-index: 15;
+  position: fixed;
+  display: none;
+  width: 0;
+  height: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: rgba(230, 224, 224, 0.951);
+  transition: all 0.3s ease-in-out;
+  opacity: 0;
+  scale: 0;
+}
+
+.fenButtonOn {
+  animation: fenBoutonApparition .6s forwards;
+  animation-iteration-count: 1;
+}
+.fenButtonOff {
+  animation: fenBoutonDisparition .6s forwards;
+  animation-iteration-count: 1;
+}
+
+@keyframes fenBoutonApparition {
+  0% {
+      clip-path: circle(0vh at center);
+      opacity: 0;
+      scale: 0;
+  }
+  75% {
+      scale: 1.05;
+  }
+  100% {
+      clip-path: circle(100% at center);
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      scale: 1;
+  }
+}
+@keyframes fenBoutonDisparition {
+  0% {
+      clip-path: circle(100% at center);
+      width: 100%;
+      height: 100%;
+      opacity: 1;
+      scale: 1;
+  }
+  100% {
+      clip-path: circle(0vh at center);
+      width: 0%;
+      height: 0%;
+      opacity: 0;
+      scale: 0;
+  }
+}
+
+#close-container {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 15px;
+  width: 30px;
+  height: 30px;
+  background-color: var(--flag-background-color);
+  font-weight: bold;
+  color: white;
+  border-radius: 50%;
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+
+#close-container:hover {
+  background-color: rgb(210, 71, 71, 0.8);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+  animation: reset-button-anim 1s infinite;
+}
+
+#help-text h2 {
+  font-family: MOOD;
+  font-size: 2.5rem;
+  color: var(--timer-background-color)
+}
+#help-text {
+  display: grid;
+  place-items: center;
+  font-family: MOOD;
+  padding: 20px;
+  font-size: 1.5rem;
+}
+
+#defeat-text {
+  display: grid;
+  place-items: center;
+  font-family: MOOD_ct;
+  padding: 20px;
+  font-size: 5rem;
+  color: var(--flag-background-color);
+}

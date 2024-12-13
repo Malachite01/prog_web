@@ -18,7 +18,37 @@
     <div id="score-flag"></div><span id="flag-counter">0</span>
     <span id="time-counter">00:00</span>
     <button onclick="window.location.reload();" id="reset-button"><img src="img/reset.png" width="30" alt="image reset">Réinitialiser</button>
+    <button id="information" onclick="toggleContainer('help')">i</button>
   </div>
+  
+  <!-- Ecran d'aide -->
+  <div id="help-container" class="invisible-container">
+    <div id="help-text">
+      <h2>Comment jouer ?</h2>
+      <p>Le but du jeu est de découvrir toutes les cases sans mines. Si vous découvrez une mine, vous avez perdu.</p>
+      <ul>
+        <li>Cliquez sur une case pour la découvrir</li>
+        <li>Cliquez avec le bouton droit pour placer un drapeau</li>
+        <li>Le but est de découvrir toutes les cases sans mines</li>
+        <li>Si vous découvrez une mine, vous avez perdu</li>
+        <li>Vous pouvez cliquer sur le bouton "Réinitialiser" pour recommencer une partie</li>
+        <!-- TODO: ajouter les futurs changements -->
+      </ul>
+    </div>
+    <button onclick="toggleContainer('help')" id="close-container">X</button>
+  </div>
+
+  <!-- Ecran de victoire -->
+  <div id="victory-container" class="invisible-container">
+    <div id="victory-text">Victoire !</div>
+    <!-- TODO: ajouter l'ajout  au HIGH SCORE-->
+  </div>
+
+  <!-- Ecran de défaite -->
+  <div id="game-over-container" class="invisible-container">
+    <div id="defeat-text">Game over !</div>
+  </div>
+
 
   <div id="grid-container">
     <table id="grid">
