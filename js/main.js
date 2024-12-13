@@ -1,5 +1,5 @@
-const gridSize = 5;
-const nbMines = 10;
+const gridSize = 12;
+const nbMines = 30;
 let remainingFlags = nbMines;
 let timer = 0;
 let timerInterval = null;
