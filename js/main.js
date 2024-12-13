@@ -1,5 +1,5 @@
-const gridSize = 12;
-const nbMines = 30;
+let gridSize = 12;
+let nbMines = 30;
 let remainingFlags = nbMines;
 let timer = 0;
 let timerInterval = null;
@@ -289,6 +289,34 @@ function reDrawGrid(field) {
   const grid = document.getElementById('grid');
   grid.innerHTML = "";
   createHTMLGrid(field);
+}
+
+function changeDifficulty() {
+  var select = document.getElementById("difficulty-menu").value;
+  switch(select) {
+    case 'ez':
+      gridSize = 8;
+      nbMines  = 12;
+      break;
+    case 'mid':
+      gridSize = 12;
+      nbMines = 30;
+      break;
+    case 'hard':
+      gridSize = 18;
+      nbMines = 100;
+      break;
+    default:
+      gridSize = 14;
+      nbMines = 30;
+      break;
+  }
+  const grid = document.getElementById('grid');
+  grid.innerHTML = "";
+  timer=0;
+  clearInterval(timerInterval);
+  updateTimer(timerInterval);
+  createEmptyHTMLGrid();
 }
 
 /**
