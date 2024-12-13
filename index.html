@@ -19,6 +19,11 @@
     <span id="time-counter">00:00</span>
     <button onclick="window.location.reload();" id="reset-button"><img src="img/reset.png" width="30" alt="image reset">Réinitialiser</button>
     <button id="information" onclick="toggleContainer('help')">i</button>
+    <select onchange=changeDifficulty() name="difficulty" id="difficulty-menu">
+      <option value="ez">Easy</option>
+      <option value="mid" selected>Medium</option>
+      <option value="hard">Difficult</option>
+    </select>
   </div>
   
   <!-- Ecran d'aide -->

@@ -123,6 +123,19 @@ body {
   filter: brightness(1000%);
 }
 
+#difficulty-menu {
+  font-family: MOOD;
+  font-size: 1.5rem;
+  padding: 5px;
+  border-radius: 5px;
+  text-align: center;
+  justify-content: center;
+  background-color: lightblue;
+  color: darkblue;
+  border: none;
+  cursor: pointer;
+}
+
 #grid-container {
   margin-top: 20px;
   display: flex;
