@@ -374,15 +374,24 @@ function gameOver() {
   clearInterval(timerInterval);
 }
 
+
+/**
+ * Fonction pour arrêter le jeu et afficher un message de victoire
+*/
 function victory() {
-  alert("Victoire!");
-  clearInterval(timerInterval)
+  toggleContainer('victory');
+  clearInterval(timerInterval);
+  document.getElementById('victory-time').textContent = document.getElementById('time-counter').textContent;
 }
 
 //#endregion
 
 //#region Visuel
 
+/**
+ * Fonction pour afficher ou masquer un conteneur
+ * @param {string} containerName - Nom du conteneur à afficher/masquer
+ */
 function toggleContainer(containerName) {
   const container = document.getElementById(containerName+'-container');
 

@@ -406,3 +406,40 @@ td {
   font-size: 5rem;
   color: var(--flag-background-color);
 }
+
+#victory-text {
+  display: grid;
+  place-items: center;
+  font-family: MOOD_ct;
+  padding: 20px;
+  font-size: 5rem;
+  color: var(--grid-tile-background-color);
+}
+
+.reset-button {
+  font-family: MOOD;
+  font-size: 1.5rem;
+  padding: 5px;
+  border-radius: 5px;
+  background-color: var(--flag-background-color);
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+.reset-button:hover {
+  background-color: rgb(210, 71, 71, 0.8);
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 30px 60px -12px inset, rgba(0, 0, 0, 0.3) 0px 18px 36px -18px inset;
+}
+.reset-button>img {
+  vertical-align: middle;
+  margin-right: 5px;
+  filter: brightness(1000%);
+}
+
+#victory-time {
+  font-family: MOOD_ct;
+  font-size: 2.5rem;
+  color: var(--timer-background-color);
+  text-align: center;
+}
