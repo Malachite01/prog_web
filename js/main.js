@@ -1,5 +1,5 @@
-const gridSize = 12;
-const nbMines = 30;
+const gridSize = 5;
+const nbMines = 10;
 let remainingFlags = nbMines;
 let timer = 0;
 let timerInterval = null;
@@ -28,6 +28,7 @@ class Case {
 
 //#region Plateau class
 class Plateau {
+
   constructor(size, initialClick) {
     this.size = size;
     this.field= this.createEmptyBoard();
@@ -159,6 +160,17 @@ class Plateau {
     });
   }
 
+  checkAllRevealed() {
+    for (let i = 0; i < gridSize; i++) {
+      for (let j = 0; j < gridSize; j++) {
+          if (!this.field[i][j].isMine() && !this.field[i][j].isRevealed) {
+            return false;
+          }
+        } 
+      }
+      return true;
+    }
+
   /**
    * Renvoie un booléen indiquant si la case est dans les limites du terrain
    * @param {number} x
@@ -284,6 +296,7 @@ function reDrawGrid(field) {
  * @param {Variable d'évenement  de clic} e 
  */
 function handleMouseClick(e, field) {
+
   const button = e.button;
   const pos = e.target.getAttribute('data-pos').split(','); // [x, y]
   // Convert pos[0] and pos[1] to numbers
@@ -303,10 +316,11 @@ function handleMouseClick(e, field) {
       field.revealAllZero(field.field[x][y]);
     }
     reDrawGrid(field);
+
     // Si la case cliquée est une mine, game over
-    if (field.field[x][y].isMine()) {
-      gameOver();
-    }
+    if (field.field[x][y].isMine()) gameOver();
+    if (field.checkAllRevealed())   victory();  
+
   } else if (button === 2) { //click droit
     if (field.field[x][y].isFlaged && !field.field[x][y].isRevealed) {
       // Mettre à jour la case
@@ -358,6 +372,11 @@ function updateTimer() {
 function gameOver() {
   toggleContainer('game-over');
   clearInterval(timerInterval);
+}
+
+function victory() {
+  alert("Victoire!");
+  clearInterval(timerInterval)
 }
 
 //#endregion
