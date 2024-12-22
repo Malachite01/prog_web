@@ -88,10 +88,17 @@ function displayHighScores() {
   // Réinitialiser le contenu de la table
   highScoresTable.innerHTML = '<thead><tr><th>Nom</th><th>Score</th></tr></thead><tbody></tbody>';
 
-  // Ajouter chaque score en tant que ligne
-  highScores.forEach(scoreEntry => {
-    const row = document.createElement('tr');
-    row.innerHTML = `<td>${scoreEntry.username}</td><td>${scoreEntry.score}</td>`;
-    highScoresTable.closest('table').querySelector('tbody').appendChild(row);
-  });
+  // Vérifier si la liste des scores est vide
+  if (highScores.length === 0) {
+    const messageRow = document.createElement('tr');
+    messageRow.innerHTML = `<td colspan="2" style="text-align: center;">Aucun score disponible</td>`;
+    highScoresTable.closest('table').querySelector('tbody').appendChild(messageRow);
+  } else {
+    // Ajouter chaque score en tant que ligne
+    highScores.forEach(scoreEntry => {
+      const row = document.createElement('tr');
+      row.innerHTML = `<td>${scoreEntry.username}</td><td>${scoreEntry.score}</td>`;
+      highScoresTable.closest('table').querySelector('tbody').appendChild(row);
+    });
+  }
 }
