@@ -5,13 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Démineur - Projet de Programmation Web</title>
   <link rel="stylesheet" href="style.css">
-  <script src="js/main.js"></script>
   <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
   <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
   <link rel="manifest" href="site.webmanifest">
 </head>
-<body onload="createEmptyHTMLGrid();">
+<body onload="createEmptyHTMLGrid();displayHighScores();">
   <img src="img/logo.webp" alt="logo du démineur fait main :)" id="logo">
 
   <div id="visual-board">
@@ -30,13 +29,12 @@
   <div id="help-container" class="invisible-container">
     <div id="help-text">
       <h2>Comment jouer ?</h2>
-      <p>Le but du jeu est de découvrir toutes les cases sans mines. Si vous découvrez une mine, vous avez perdu.</p>
+      <p>Le but du jeu est de découvrir toutes les cases sans mines. Si vous découvrez une mine, vous avez perdu !</p>
       <ul>
         <li>Cliquez sur une case pour la découvrir</li>
         <li>Cliquez avec le bouton droit pour placer un drapeau</li>
-        <li>Le but est de découvrir toutes les cases sans mines</li>
-        <li>Si vous découvrez une mine, vous avez perdu</li>
         <li>Vous pouvez cliquer sur le bouton "Réinitialiser" pour recommencer une partie</li>
+        <li>Vous pouvez aussi sélectionner le niveau de difficulté (un niveau de diffuculté élevé donnera un plus gros multiplicateur à votre score final !).</li>
         <!-- TODO: ajouter les futurs changements -->
       </ul>
     </div>
@@ -48,10 +46,14 @@
     <div id="victory-text">Victoire !</div>
     <span id="victory-time"></span>
     <!-- TODO: ajouter l'ajout  au HIGH SCORE-->
-    <form action="submit" id="high-score-form">
-      <label for="username">Nom d'utilisateur: <input name="username" type="text" id="username" maxlength="40"></label>
-      <button type="submit" class="add-button"><img src="img/add.png" width="30" alt="image ajouter">Ajouter un Score !</button>
-    </form>
+    <form id="high-score-form" onsubmit="addScore(event)">
+      <label for="username">
+        Nom d'utilisateur: <input name="username" type="text" id="username" maxlength="40" required>
+      </label>
+      <button type="submit" class="add-button">
+        <img src="img/add.png" width="30" alt="image ajouter">Ajouter un Score !
+      </button>
+    </form>    
   </div>
 
   <!-- Ecran de défaite -->
@@ -60,11 +62,20 @@
     <button onclick="window.location.reload();" class="reset-button"><img src="img/reset.png" width="30" alt="image reset">Réinitialiser</button>
   </div>
 
-
-  <!-- Grille de jeu -->
-  <div id="grid-container">
-    <table id="grid">
-    </table>
+  <div id="game-container">
+    <!-- Grille de jeu -->
+    <div id="grid-container">
+      <table id="grid">
+      </table>
+    </div>
+  
+    <!-- Highscores -->
+    <aside id="aside-high-scores">
+      <h2>Highscores🏆</h2>
+      <table id="high-scores"></table>
+    </aside>
   </div>
+<script src="js/main.js"></script>
+<script src="js/score.js"></script>
 </body>
 </html>

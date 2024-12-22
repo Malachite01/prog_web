@@ -71,11 +71,20 @@ body {
   padding: 5px;
   padding-right: 8px;
   padding-left: 8px;
+  transition: all 0.3s ease-in-out;
 }
 
 #time-counter, #flag-counter {
   font-family: MOOD_ct;
   font-size: 2.5rem;
+}
+
+#flag-counter {
+  grid-area: flag-counter;
+}
+
+#time-counter {
+  grid-area: time;
 }
 
 #time-counter {
@@ -87,6 +96,7 @@ body {
   font-size: 1.5rem;
   padding: 5px;
   border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   background-color: var(--flag-background-color);
   color: white;
   border: none;
@@ -124,38 +134,179 @@ body {
 }
 
 #difficulty-menu {
+  grid-area: difficulty;
   font-family: MOOD;
   font-size: 1.5rem;
-  padding: 5px;
+  padding: 8px;
   border-radius: 5px;
   text-align: center;
-  justify-content: center;
-  background-color: lightblue;
-  color: darkblue;
+  background-color: rgb(245, 239, 239);
+  color: var(--timer-background-color);
   border: none;
   cursor: pointer;
+  box-shadow: rgb(204, 219, 232) 3px 3px 6px 0px inset, rgba(255, 255, 255, 0.5) -3px -3px 6px 1px inset;
+}
+
+#score-flag {
+  grid-area: flag;
+  position: relative;
+  z-index: 10;
+  width: 5px;
+  height: 28px;
+  border-radius: 5px;
+  background-color: var(--flag-background-color);
+  pointer-events: none;
+}
+#score-flag::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 100%;
+  width: 0;
+  height: 0;
+  border-left: 20px solid var(--flag-triangle-color, var(--flag-triangle-color)); 
+  border-top: 10px solid transparent;
+  border-bottom: 10px solid transparent;
+  border-radius: 2px;
+}
+
+@media screen and (max-width: 900px) {
+  #visual-board {
+    gap: 20px;
+  }
+
+  #score-flag {
+    width: 3px;
+    height: 20px;
+  }
+  #score-flag::after {
+    border-left: 15px solid var(--flag-triangle-color, var(--flag-triangle-color)); 
+    border-top: 7px solid transparent;
+    border-bottom: 7px solid transparent;
+  }
+
+  #time-counter, #flag-counter {
+    font-size: 1.7rem;
+  }
+
+  #reset-button {
+    grid-area: reset;
+    font-size: 1.2rem;
+    padding: 1px;
+  }
+
+  #difficulty-menu {
+    font-size: 1.2rem;
+    padding: 7px;
+  }
+
+  #logo {
+    width: 12rem;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  #visual-board {
+    display: grid;
+    grid-template-areas:
+    ". difficulty information reset"
+    " flag flag-counter time .";
+    place-items: center;
+    gap: 0px;
+  }
+}
+
+#game-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
 }
 
 #grid-container {
-  margin-top: 20px;
   display: flex;
+  flex: 1;
+  margin-top: 20px;
   justify-content: center;
   align-items: center;
-  width: 70%;
+  min-width: 70%;
 }
+
+#aside-high-scores {
+  position: absolute;
+  right: 1%;
+  text-align: right;
+  flex-shrink: 0;
+  font-family: MOOD;
+  color: rgb(47, 47, 47);
+  font-size: 1.3rem;
+}
+
+#aside-high-scores h2 {
+  font-family: MOOD;
+  font-size: 1.8rem;
+  font-style: italic;
+  color: black;
+}
+
+#high-scores {
+  text-align: center;
+  width: 100%;
+}
+
+#high-scores tbody tr {
+  padding-bottom: 20px;
+}
+
+#high-scores tbody tr:nth-child(1)::after {
+  content: '🥇';
+  position: absolute;
+  top: 50%;
+  left: -1rem;
+  transform: translateY(-50%);
+}
+
+#high-scores tbody tr:nth-child(2)::after {
+  content: '🥈';
+  position: absolute;
+  top: 50%;
+  left: -1rem;
+  transform: translateY(-50%);
+}
+
+#high-scores tbody tr:nth-child(3)::after {
+  content: '🥉';
+  position: absolute;
+  top: 50%;
+  left: -1rem;
+  transform: translateY(-50%);
+}
+
+@media screen and (max-width: 900px) {
+  #aside-high-scores h2 {
+    font-size: 1.5rem;
+  }
+}
+@media screen and (max-width: 750px) {
+  #aside-high-scores {
+    position: relative;
+    text-align: center;
+    min-width: 200px;
+  }
+}
+
 
 table {
   border-radius: var(--grid-border-radius);
 }
 
-table, tr, td {
+table#grid, tr, td {
   position: relative;
   border-collapse: collapse;
   padding: 0;
   margin: 0;
 }
 
-td {
+#grid td {
   width: clamp(20px, 5vw, 50px);
   height: clamp(20px, 5vw, 50px);
 }
@@ -210,28 +361,6 @@ td {
   filter: drop-shadow(0 0 5px red) drop-shadow(0 0 5px red) drop-shadow(0 0 5px red) saturate(200%);
 }
 
-#score-flag {
-  position: relative;
-  z-index: 10;
-  width: 5px;
-  height: 28px;
-  border-radius: 5px;
-  background-color: var(--flag-background-color);
-  pointer-events: none;
-}
-#score-flag::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 100%;
-  width: 0;
-  height: 0;
-  border-left: 20px solid var(--flag-triangle-color, var(--flag-triangle-color)); 
-  border-top: 10px solid transparent;
-  border-bottom: 10px solid transparent;
-  border-radius: 2px;
-}
-
 .flag {
   z-index: 10;
   position: absolute;
@@ -280,6 +409,7 @@ td {
 }
 
 #information {
+  grid-area: information;
   position: relative;
   display: flex;
   font-family: MOOD;
@@ -384,7 +514,8 @@ td {
   background-color: var(--flag-background-color);
   font-weight: bold;
   color: white;
-  border-radius: 50%;
+  border-radius: 5px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;
   border: none;
   display: flex;
   justify-content: center;
@@ -418,6 +549,7 @@ td {
   padding: 20px;
   font-size: 5rem;
   color: var(--flag-background-color);
+  z-index: 5;
 }
 
 #victory-text {
@@ -491,7 +623,6 @@ td {
   font-size: 1.5rem;
   padding: 5px;
   border-radius: 5px;
-  color: white;
   border: none;
   cursor: pointer;
   transition: all 0.3s;
