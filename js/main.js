@@ -409,7 +409,10 @@ function gameOver() {
 function victory() {
   toggleContainer('victory');
   clearInterval(timerInterval);
-  document.getElementById('victory-time').textContent = document.getElementById('time-counter').textContent;
+  document.getElementById('victory-time').textContent = "Temps : " + document.getElementById('time-counter').textContent;
+  const time = parseTimeToSeconds(document.getElementById('time-counter').textContent);
+  const difficulty = document.getElementById('difficulty-menu').value;
+  document.getElementById('victory-score').textContent = "Score : " + calculateScore(time, difficulty);
 }
 
 //#endregion
@@ -439,6 +442,27 @@ function toggleContainer(containerName) {
     container.classList.remove('fenButtonOff');
     container.classList.add('fenButtonOn');
   }
+}
+
+//#endregion
+
+//#region Sound
+let isMuted = true;
+var audio = new Audio('../sound/m_impossible_song.mp3');
+
+// Mute le son de la musique
+function toggleMute() {
+  audio.loop = true;
+  audio.volume = 0.5;
+  const muteImg = document.getElementById('mute-img');
+  if (isMuted) {
+    audio.pause();
+    muteImg.src = '../img/no-sound.png';
+  } else {
+    audio.play();
+    muteImg.src = '../img/sound.png';
+  }
+  isMuted = !isMuted;
 }
 
 //#endregion

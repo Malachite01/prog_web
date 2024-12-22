@@ -10,8 +10,10 @@
   <link rel="icon" type="image/png" sizes="16x16" href="img/favicon/favicon-16x16.png">
   <link rel="manifest" href="site.webmanifest">
 </head>
-<body onload="createEmptyHTMLGrid();displayHighScores();">
+<body onload="createEmptyHTMLGrid();displayHighScores();playTheme();">
   <img src="img/logo.webp" alt="logo du démineur fait main :)" id="logo">
+
+  <button id="mute-button" onclick="toggleMute()"><img src="img/no-sound.png" alt="sound icon" width="30" id="mute-img"></button>
 
   <div id="visual-board">
     <div id="score-flag"></div><span id="flag-counter">0</span>
@@ -35,7 +37,6 @@
         <li>Cliquez avec le bouton droit pour placer un drapeau</li>
         <li>Vous pouvez cliquer sur le bouton "Réinitialiser" pour recommencer une partie</li>
         <li>Vous pouvez aussi sélectionner le niveau de difficulté (un niveau de diffuculté élevé donnera un plus gros multiplicateur à votre score final !).</li>
-        <!-- TODO: ajouter les futurs changements -->
       </ul>
     </div>
     <button onclick="toggleContainer('help')" id="close-container">X</button>
@@ -45,7 +46,8 @@
   <div id="victory-container" class="invisible-container">
     <div id="victory-text">Victoire !</div>
     <span id="victory-time"></span>
-    <!-- TODO: ajouter l'ajout  au HIGH SCORE-->
+    <img src="img/victory.png" alt="victory img" width="200">
+    <span id="victory-score"></span>
     <form id="high-score-form" onsubmit="addScore(event)">
       <label for="username">
         Nom d'utilisateur: <input name="username" type="text" id="username" maxlength="40" required>
