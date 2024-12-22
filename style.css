@@ -307,7 +307,6 @@ body {
 
 #aside-high-scores {
   position: absolute;
-  z-index: 20;
   right: 1%;
   text-align: right;
   flex-shrink: 0;
