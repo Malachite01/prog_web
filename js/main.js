@@ -451,7 +451,7 @@ let isMuted = true;
 // Quand la page est chargée, crée un objet Audio pour la musique
 let audio = null;
 function createAudio() {
-  audio = new Audio('/audio/music.mp3');
+  audio = new Audio('https://malachite01.github.io/prog_web/audio/music.mp3');
 }
 
 // Mute le son de la musique
@@ -461,10 +461,10 @@ function toggleMute() {
   const muteImg = document.getElementById('mute-img');
   if (!isMuted) {
     audio.pause();
-    muteImg.src = '/img/no-sound.png';
+    muteImg.src = 'https://malachite01.github.io/prog_web/img/no-sound.png';
   } else {
     audio.play();
-    muteImg.src = '/img/sound.png';
+    muteImg.src = 'https://malachite01.github.io/prog_web/img/sound.png';
   }
   isMuted = !isMuted;
 }
