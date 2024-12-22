@@ -448,14 +448,18 @@ function toggleContainer(containerName) {
 
 //#region Sound
 let isMuted = true;
-var audio = new Audio('../sound/m_impossible_song.mp3');
+// Quand la page est chargée, crée un objet Audio pour la musique
+let audio = null;
+function createAudio() {
+  audio = new Audio('../audio/music.mp3');
+}
 
 // Mute le son de la musique
 function toggleMute() {
   audio.loop = true;
   audio.volume = 0.5;
   const muteImg = document.getElementById('mute-img');
-  if (isMuted) {
+  if (!isMuted) {
     audio.pause();
     muteImg.src = '../img/no-sound.png';
   } else {
