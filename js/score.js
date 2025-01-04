@@ -65,7 +65,8 @@ function saveHighScore(username, score) {
   // Récupérer les scores existants
   let highScores = JSON.parse(localStorage.getItem('highScores')) || [];
 
-  // Ajouter le nouveau score
+  // Ajouter le nouveau score si le nom d'utilisateur n'est pas vide
+  if (username === '') return; 
   highScores.push({ username, score });
 
   // Trier les scores (du plus élevé au plus bas)
