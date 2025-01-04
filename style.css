@@ -661,7 +661,7 @@ table#grid, tr, td {
 }
 
 #game-over-container {
-  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='60' height='30' patternTransform='scale(2) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='%23dfdfecff'/><path d='M1-6.5v13h28v-13H1zm15 15v13h28v-13H16zm-15 15v13h28v-13H1z'  stroke-width='1' stroke='none' fill='%23bfbabaff'/><path d='M31-6.5v13h28v-13H31zm-45 15v13h28v-13h-28zm60 0v13h28v-13H46zm-15 15v13h28v-13H31z'  stroke-width='1' stroke='none' fill='%23eaceccff'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>")
+  background-image: url("data:image/svg+xml,<svg id='patternId' width='100%' height='100%' xmlns='http://www.w3.org/2000/svg'><defs><pattern id='a' patternUnits='userSpaceOnUse' width='40' height='40' patternTransform='scale(1) rotate(0)'><rect x='0' y='0' width='100%' height='100%' fill='%23d8d8d8ff'/><path d='m25.57 20.66 13.77 13.77-4.91 4.91-13.77-13.77zm13.77 4.91L25.57 39.11l-4.91-4.91 13.77-13.54zm-20-11.14-4.91 4.91L.66 5.57 5.57.66zM5.57 19.34.66 14.43 14.43.66l4.91 4.91z'  stroke-width='1' stroke='none' fill='%23d9d9d9ff'/><path d='M34.43 19.34 20.66 5.57 25.57.66l13.77 13.77zm-13.77-4.91L34.43.66l4.91 4.91-13.77 13.77zm-1.32 20-4.91 4.91L.66 25.57l4.91-4.91zM5.57 39.34.66 34.43l13.77-13.77 4.91 4.91z'  stroke-width='1' stroke='none' fill='%23f7bfbbff'/></pattern></defs><rect width='800%' height='800%' transform='translate(0,0)' fill='url(%23a)'/></svg>");
 }
 
 .reset-button {
