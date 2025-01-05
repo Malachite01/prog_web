@@ -4,8 +4,6 @@ let remainingFlags = nbMines;
 let timer = 0;
 let timerInterval = null;
 
-// TODO: idées: niveaux de difficultés (changer gridSize), ajouter une sauvegarde de highscore(avec un formulaire surnom et valider), drapeaux mode téléphone
-//  ajouter un I d'informations sur comment jouer
 //#region Case class
 class Case {
   constructor(x, y, caseValue = 0, isRevealed = false, isFlaged = false) {
