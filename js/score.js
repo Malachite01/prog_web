@@ -17,7 +17,7 @@ function addScore(event) {
 
   // Création d'un objet String pour le nom d'utilisateur sans les espaces
   const username = new String(document.getElementById('username').value.trim());
-  const timeInSeconds = parseTimeToSeconds(document.getElementById('victory-time').textContent);
+  const timeInSeconds = parseTimeToSeconds(document.getElementById('time-counter').textContent);
   const difficulty = document.getElementById('difficulty-menu').value;
 
   const score = calculateScore(timeInSeconds, difficulty);
