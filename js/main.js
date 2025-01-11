@@ -285,7 +285,10 @@ function createHTMLGrid(field) {
  */
 function reDrawGrid(field) {
   const grid = document.getElementById('grid');
-  grid.innerHTML = "";
+  while (grid.firstChild) {
+    grid.removeChild(grid.firstChild);
+  }
+  // grid.innerHTML = "" fonctionne aussi, mais ici on veut supprimer explicitement les éléments dans le DOM
   createHTMLGrid(field);
 }
 
